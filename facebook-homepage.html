@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facebook – Home</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --fb-blue:  #1877f2;
+      --fb-hover: #e7f0fd;
+      --fb-dark:  #0d47a1;
+      --green:    #42b72a;
+      --text:     #050505;
+      --muted:    #65676b;
+      --border:   #dddfe2;
+      --bg:       #f0f2f5;
+      --card:     #ffffff;
+      --nav-h:    56px;
+      --left-w:   280px;
+      --right-w:  300px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+    /* ── NAVBAR ─────────────────────────────── */
+    .fb-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: var(--left-w) 1fr var(--right-w);
+      align-items: center;
+      padding: 0 12px;
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    }
+
+    /* logo */
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo-text {
+      font-size: 26px; font-weight: 900;
+      color: var(--fb-blue); letter-spacing: -1.5px;
+    }
+    .search-box {
+      display: flex; align-items: center;
+      background: var(--bg); border-radius: 30px;
+      padding: 8px 14px; gap: 8px;
+      max-width: 240px;
+      border: 1.5px solid transparent;
+      transition: border-color .2s;
+    }
+    .search-box:focus-within { border-color: var(--fb-blue); }
+    .search-box input {
+      border: none; background: transparent; outline: none;
+      font-size: 14px; font-family: 'Nunito', sans-serif; width: 100%;
+      color: var(--text);
+    }
+    .search-box i { color: var(--muted); font-size: 15px; }
+
+    /* center nav icons */
+    .nav-center {
+      display: flex; align-items: center; justify-content: center;
+      gap: 4px;
+    }
+    .nav-icon-btn {
+      width: 48px; height: 46px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px; cursor: pointer;
+      font-size: 22px; color: var(--muted);
+      transition: background .15s, color .15s;
+      position: relative;
+      text-decoration: none;
+    }
+    .nav-icon-btn:hover { background: var(--fb-hover); color: var(--fb-blue); }
+    .nav-icon-btn.active {
+      color: var(--fb-blue);
+      border-bottom: 3px solid var(--fb-blue);
+      border-radius: 10px 10px 0 0;
+    }
+    .nav-badge {
+      position: absolute; top: 4px; right: 4px;
+      background: #e41e3f; color: #fff;
+      font-size: 10px; font-weight: 700;
+      width: 18px; height: 18px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    /* right nav */
+    .nav-right {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 8px;
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      object-fit: cover; cursor: pointer;
+      border: 2px solid var(--fb-blue);
+    }
+    .nav-icon-round {
+      width: 36px; height: 36px;
+      background: var(--bg); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer; color: var(--text);
+      transition: background .15s;
+      position: relative;
+    }
+    .nav-icon-round:hover { background: #d8dadf; }
+    .nav-name-tag {
+      font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap;
+    }
+
+    /* ── LAYOUT ─────────────────────────────── */
+    .main-layout {
+      display: grid;
+      grid-template-columns: var(--left-w) 1fr var(--right-w);
+      gap: 0;
+      min-height: 100vh;
+      padding-top: var(--nav-h);
+    }
+
+    /* ── LEFT SIDEBAR ── */
+    .left-sidebar {
+      position: sticky; top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      overflow-y: auto; overflow-x: hidden;
+      padding: 10px 8px;
+    }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px; font-weight: 600;
+      transition: background .15s;
+      margin-bottom: 2px;
+    }
+    .sidebar-link:hover { background: var(--fb-hover); color: var(--fb-blue); }
+    .sidebar-link i { font-size: 22px; width: 28px; text-align: center; }
+    .sidebar-icon-circle {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .sidebar-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg,#1877f2,#42b72a);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 15px; font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .sidebar-section-title {
+      font-size: 15px; font-weight: 700; color: var(--muted);
+      padding: 14px 10px 6px;
+    }
+
+    .sidebar-divider {
+      border: none; border-top: 1px solid var(--border); margin: 8px 0;
+    }
+
+    /* ── FEED ── */
+    .feed-col {
+      padding: 20px 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Stories */
+    .stories-row {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px;
+      margin-bottom: 16px;
+    }
+    .stories-row::-webkit-scrollbar { display: none; }
+
+    .story-card {
+      flex: 0 0 110px;
+      height: 190px;
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform .2s;
+      box-shadow: 0 2px 10px rgba(0,0,0,.1);
+    }
+    .story-card:hover { transform: scale(1.03); }
+
+    .story-bg {
+      width: 100%; height: 100%;
+      background-size: cover; background-position: center;
+    }
+    .story-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.5) 100%);
+    }
+    .story-avatar {
+      position: absolute; top: 10px; left: 10px;
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 3px solid var(--fb-blue);
+      background: linear-gradient(135deg,#1877f2,#42b72a);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 800;
+    }
+    .story-name {
+      position: absolute; bottom: 10px; left: 8px; right: 8px;
+      font-size: 12px; font-weight: 700; color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,.6);
+    }
+
+    .story-add {
+      flex: 0 0 110px; height: 190px;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      background: var(--card);
+      display: flex; flex-direction: column;
+      border: 1.5px solid var(--border);
+      transition: box-shadow .2s;
+    }
+    .story-add:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+    .story-add-top {
+      height: 120px;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .story-add-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg,#1877f2,#7c4dff);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 18px; font-weight: 800;
+      border: 3px solid var(--card);
+    }
+    .story-add-plus {
+      position: absolute; bottom: -10px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--fb-blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800;
+      border: 2.5px solid var(--card);
+    }
+    .story-add-bottom {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--text); padding-top: 10px;
+    }
+
+    /* Post box */
+    .post-box {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .post-box-top {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    }
+    .post-input {
+      flex: 1; background: var(--bg);
+      border: none; border-radius: 30px;
+      padding: 10px 16px;
+      font-size: 15px; font-family: 'Nunito', sans-serif;
+      color: var(--muted); cursor: pointer;
+      outline: none;
+      transition: background .2s;
+    }
+    .post-input:hover { background: #e4e6eb; }
+    .post-box-bottom {
+      display: flex; justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 10px; gap: 4px;
+    }
+    .post-action {
+      display: flex; align-items: center; justify-content: center;
+      gap: 7px; flex: 1; padding: 8px;
+      border-radius: 10px; cursor: pointer;
+      font-size: 14px; font-weight: 700;
+      transition: background .15s;
+    }
+    .post-action:hover { background: var(--bg); }
+
+    /* Feed post card */
+    .post-card {
+      background: var(--card);
+      border-radius: 14px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      transition: box-shadow .2s;
+    }
+    .post-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+    .post-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px 10px;
+    }
+    .post-user-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 16px; font-weight: 800; flex-shrink: 0;
+    }
+    .post-user-name { font-size: 14px; font-weight: 800; }
+    .post-time { font-size: 12px; color: var(--muted); }
+    .post-menu {
+      margin-left: auto; width: 32px; height: 32px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; color: var(--muted);
+      transition: background .15s;
+    }
+    .post-menu:hover { background: var(--bg); }
+
+    .post-text { padding: 0 16px 12px; font-size: 15px; line-height: 1.6; }
+
+    .post-img {
+      width: 100%; max-height: 480px;
+      object-fit: cover; display: block;
+    }
+
+    .post-stats {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 16px;
+    }
+    .post-reactions { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); }
+    .react-emoji { font-size: 16px; }
+    .post-comments-count { font-size: 13px; color: var(--muted); }
+
+    .post-actions {
+      display: flex; border-top: 1px solid var(--border);
+      margin: 0 8px;
+    }
+    .post-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 8px;
+      border-radius: 10px; cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--muted);
+      transition: background .15s, color .15s;
+      margin: 4px 2px;
+    }
+    .post-btn:hover { background: var(--bg); color: var(--text); }
+    .post-btn.liked { color: var(--fb-blue); }
+    .post-btn i { font-size: 18px; }
+
+    /* comment box */
+    .comment-box {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+    }
+    .comment-input {
+      flex: 1; background: var(--bg);
+      border: none; border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 13px; font-family: 'Nunito', sans-serif;
+      outline: none; color: var(--text);
+    }
+
+    /* ── RIGHT SIDEBAR ── */
+    .right-sidebar {
+      position: sticky; top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      overflow-y: auto; overflow-x: hidden;
+      padding: 16px 12px;
+    }
+
+    .right-section-title {
+      font-size: 15px; font-weight: 700; color: var(--muted);
+      margin-bottom: 10px; padding: 0 4px;
+    }
+
+    .sponsor-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 6px; border-radius: 10px; cursor: pointer;
+      transition: background .15s; margin-bottom: 2px;
+    }
+    .sponsor-card:hover { background: var(--fb-hover); }
+    .sponsor-img {
+      width: 100px; height: 100px; border-radius: 10px;
+      object-fit: cover; flex-shrink: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+    }
+    .sponsor-name { font-size: 13px; font-weight: 700; }
+    .sponsor-sub  { font-size: 12px; color: var(--muted); }
+
+    .contact-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 6px; border-radius: 10px; cursor: pointer;
+      transition: background .15s; margin-bottom: 2px;
+    }
+    .contact-item:hover { background: var(--fb-hover); }
+    .contact-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 800;
+      position: relative; flex-shrink: 0;
+    }
+    .online-dot {
+      position: absolute; bottom: 0; right: 0;
+      width: 11px; height: 11px; background: var(--green);
+      border-radius: 50%; border: 2px solid var(--card);
+    }
+    .contact-name { font-size: 14px; font-weight: 600; }
+
+    /* Birthdays */
+    .birthday-box {
+      background: var(--card);
+      border-radius: 14px; padding: 14px; margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .birthday-inner { display: flex; align-items: center; gap: 12px; }
+    .birthday-inner i { font-size: 28px; color: var(--fb-blue); }
+    .birthday-text { font-size: 13px; }
+    .birthday-text span { font-weight: 700; }
+
+    /* ── utils ── */
+    .see-more { font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; padding: 4px 10px; border-radius: 8px; }
+    .see-more:hover { background: var(--bg); color: var(--fb-blue); }
+
+    @media (max-width: 1100px) {
+      :root { --right-w: 0px; }
+      .right-sidebar { display: none; }
+      .main-layout { grid-template-columns: var(--left-w) 1fr; }
+    }
+    @media (max-width: 768px) {
+      :root { --left-w: 0px; }
+      .left-sidebar { display: none; }
+      .main-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav class="fb-nav">
+
+  <!-- Left: Logo + Search -->
+  <div class="nav-logo">
+    <span class="nav-logo-text">facebook</span>
+    <div class="search-box ms-2">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search Facebook"/>
+    </div>
+  </div>
+
+  <!-- Center: Nav Icons -->
+  <div class="nav-center">
+    <a href="#" class="nav-icon-btn active" title="Home"><i class="bi bi-house-fill"></i></a>
+    <a href="#" class="nav-icon-btn" title="Friends"><i class="bi bi-people"></i><span class="nav-badge">5</span></a>
+    <a href="#" class="nav-icon-btn" title="Watch"><i class="bi bi-play-btn"></i></a>
+    <a href="#" class="nav-icon-btn" title="Marketplace"><i class="bi bi-shop"></i></a>
+    <a href="#" class="nav-icon-btn" title="Groups"><i class="bi bi-grid"></i></a>
+    <a href="#" class="nav-icon-btn" title="Gaming"><i class="bi bi-controller"></i></a>
+  </div>
+
+  <!-- Right: Actions + Profile -->
+  <div class="nav-right">
+    <a href="facebook-login.html" style="text-decoration:none;font-size:12px;font-weight:700;color:var(--fb-blue);border:1.5px solid var(--fb-blue);padding:6px 12px;border-radius:8px;">← Login</a>
+    <div class="nav-icon-round" title="Menu"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+    <div class="nav-icon-round" title="Messenger" style="position:relative;"><i class="bi bi-messenger"></i><span class="nav-badge" style="font-size:9px;width:16px;height:16px;top:2px;right:2px;">3</span></div>
+    <div class="nav-icon-round" title="Notifications" style="position:relative;"><i class="bi bi-bell-fill"></i><span class="nav-badge" style="font-size:9px;width:16px;height:16px;top:2px;right:2px;">8</span></div>
+    <div style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 8px;border-radius:20px;transition:background .15s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='transparent'">
+      <div class="nav-icon-round" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;font-size:14px;font-weight:800;">R</div>
+      <span class="nav-name-tag">Rabiya</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ 3-COLUMN LAYOUT ══════════════ -->
+<div class="main-layout">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="left-sidebar">
+
+    <!-- Profile shortcut -->
+    <a href="#" class="sidebar-link">
+      <div class="sidebar-avatar">R</div>
+      <span>Rabiya Khan</span>
+    </a>
+
+    <a href="#" class="sidebar-link"><i class="bi bi-people-fill" style="color:#1877f2;"></i> Friends</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-clock-history" style="color:#1877f2;"></i> Memories</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-bookmark-fill" style="color:#1877f2;"></i> Saved</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-grid-fill" style="color:#1877f2;"></i> Groups</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-play-btn-fill" style="color:#e41e3f;"></i> Video</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-shop" style="color:#00a400;"></i> Marketplace</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-newspaper" style="color:#f7a400;"></i> News Feed</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-calendar-event" style="color:#1877f2;"></i> Events</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-controller" style="color:#9b30ff;"></i> Gaming</a>
+    <a href="#" class="sidebar-link"><i class="bi bi-patch-check-fill" style="color:#42b72a;"></i> Fundraisers</a>
+
+    <span class="see-more">See more ›</span>
+
+    <hr class="sidebar-divider"/>
+
+    <div class="sidebar-section-title">Your shortcuts</div>
+
+    <a href="#" class="sidebar-link">
+      <div class="sidebar-icon-circle" style="background:linear-gradient(135deg,#f7a400,#ff6b35);color:#fff;"><i class="bi bi-lightning-fill"></i></div>
+      BSCS Students – AU
+    </a>
+    <a href="#" class="sidebar-link">
+      <div class="sidebar-icon-circle" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;"><i class="bi bi-code-slash"></i></div>
+      Dev Pakistan
+    </a>
+    <a href="#" class="sidebar-link">
+      <div class="sidebar-icon-circle" style="background:linear-gradient(135deg,#e41e3f,#ff7eb3);color:#fff;"><i class="bi bi-music-note-beamed"></i></div>
+      Music Lovers PK
+    </a>
+  </aside>
+
+  <!-- ── FEED ── -->
+  <main class="feed-col">
+
+    <!-- STORIES -->
+    <div class="stories-row">
+
+      <!-- Add story -->
+      <div class="story-add">
+        <div class="story-add-top">
+          <div class="story-add-avatar">R</div>
+          <div class="story-add-plus">+</div>
+        </div>
+        <div class="story-add-bottom">Create Story</div>
+      </div>
+
+      <!-- Story cards with gradient backgrounds -->
+      <div class="story-card">
+        <div class="story-bg" style="background:linear-gradient(135deg,#1877f2,#7c4dff);height:100%;"></div>
+        <div class="story-gradient"></div>
+        <div class="story-avatar">A</div>
+        <div class="story-name">Ayesha R.</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-bg" style="background:linear-gradient(135deg,#f7a400,#ff6b35);height:100%;"></div>
+        <div class="story-gradient"></div>
+        <div class="story-avatar" style="background:linear-gradient(135deg,#f7a400,#ff6b35);">Z</div>
+        <div class="story-name">Zara M.</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-bg" style="background:linear-gradient(135deg,#42b72a,#00a400);height:100%;"></div>
+        <div class="story-gradient"></div>
+        <div class="story-avatar" style="background:linear-gradient(135deg,#42b72a,#00a400);">H</div>
+        <div class="story-name">Hassan K.</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-bg" style="background:linear-gradient(135deg,#e41e3f,#ff7eb3);height:100%;"></div>
+        <div class="story-gradient"></div>
+        <div class="story-avatar" style="background:linear-gradient(135deg,#e41e3f,#ff7eb3);">S</div>
+        <div class="story-name">Sara T.</div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-bg" style="background:linear-gradient(135deg,#9b30ff,#1877f2);height:100%;"></div>
+        <div class="story-gradient"></div>
+        <div class="story-avatar" style="background:linear-gradient(135deg,#9b30ff,#1877f2);">U</div>
+        <div class="story-name">Umar F.</div>
+      </div>
+
+    </div>
+
+    <!-- POST BOX -->
+    <div class="post-box">
+      <div class="post-box-top">
+        <div class="nav-icon-round" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;width:42px;height:42px;font-size:16px;font-weight:800;">R</div>
+        <div class="post-input">What's on your mind, Rabiya?</div>
+      </div>
+      <div class="post-box-bottom">
+        <div class="post-action"><i class="bi bi-camera-video-fill" style="color:#e41e3f;font-size:18px;"></i><span style="font-size:13px;">Live video</span></div>
+        <div class="post-action"><i class="bi bi-image-fill" style="color:#42b72a;font-size:18px;"></i><span style="font-size:13px;">Photo/video</span></div>
+        <div class="post-action"><i class="bi bi-emoji-smile-fill" style="color:#f7a400;font-size:18px;"></i><span style="font-size:13px;">Feeling</span></div>
+      </div>
+    </div>
+
+    <!-- ─── POST 1 ─── -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-user-avatar" style="background:linear-gradient(135deg,#1877f2,#7c4dff);">A</div>
+        <div>
+          <div class="post-user-name">Ayesha Raza</div>
+          <div class="post-time"><i class="bi bi-globe2" style="font-size:11px;"></i> 2 hours ago</div>
+        </div>
+        <div class="post-menu"><i class="bi bi-three-dots"></i></div>
+      </div>
+      <div class="post-text">Just finished my first React project! 🚀 So excited to share it with everyone. The learning journey never stops. #WebDev #React #BSCS</div>
+      <div style="background:linear-gradient(135deg,#1877f2 0%,#7c4dff 50%,#42b72a 100%);height:300px;display:flex;align-items:center;justify-content:center;font-size:60px;">💻</div>
+      <div class="post-stats">
+        <div class="post-reactions">
+          <span class="react-emoji">👍</span><span class="react-emoji">❤️</span><span class="react-emoji">😄</span>
+          <span style="margin-left:4px;">248</span>
+        </div>
+        <div class="post-comments-count">34 comments · 12 shares</div>
+      </div>
+      <div class="post-actions">
+        <div class="post-btn liked"><i class="bi bi-hand-thumbs-up-fill"></i> Like</div>
+        <div class="post-btn"><i class="bi bi-chat"></i> Comment</div>
+        <div class="post-btn"><i class="bi bi-share"></i> Share</div>
+      </div>
+      <div class="comment-box">
+        <div class="nav-icon-round" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;font-size:13px;font-weight:800;">R</div>
+        <input class="comment-input" type="text" placeholder="Write a comment…"/>
+      </div>
+    </div>
+
+    <!-- ─── POST 2 ─── -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-user-avatar" style="background:linear-gradient(135deg,#f7a400,#ff6b35);">Z</div>
+        <div>
+          <div class="post-user-name">Zara Malik</div>
+          <div class="post-time"><i class="bi bi-lock-fill" style="font-size:11px;"></i> 5 hours ago</div>
+        </div>
+        <div class="post-menu"><i class="bi bi-three-dots"></i></div>
+      </div>
+      <div class="post-text">Beautiful morning in Islamabad! 🌅 Nothing beats the Margalla Hills view. Alhamdulillah for days like these. 🏔️</div>
+      <div style="background:linear-gradient(135deg,#f7a400 0%,#ff6b35 40%,#e41e3f 100%);height:260px;display:flex;align-items:center;justify-content:center;font-size:70px;">🏔️</div>
+      <div class="post-stats">
+        <div class="post-reactions">
+          <span class="react-emoji">❤️</span><span class="react-emoji">😍</span><span class="react-emoji">👍</span>
+          <span style="margin-left:4px;">412</span>
+        </div>
+        <div class="post-comments-count">57 comments · 22 shares</div>
+      </div>
+      <div class="post-actions">
+        <div class="post-btn"><i class="bi bi-hand-thumbs-up"></i> Like</div>
+        <div class="post-btn"><i class="bi bi-chat"></i> Comment</div>
+        <div class="post-btn"><i class="bi bi-share"></i> Share</div>
+      </div>
+      <div class="comment-box">
+        <div class="nav-icon-round" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;font-size:13px;font-weight:800;">R</div>
+        <input class="comment-input" type="text" placeholder="Write a comment…"/>
+      </div>
+    </div>
+
+    <!-- ─── POST 3 ─── -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-user-avatar" style="background:linear-gradient(135deg,#42b72a,#00a400);">H</div>
+        <div>
+          <div class="post-user-name">Hassan Khan · <span style="font-size:12px;color:var(--muted);">Air University CSE</span></div>
+          <div class="post-time"><i class="bi bi-globe2" style="font-size:11px;"></i> Yesterday at 10:30 PM</div>
+        </div>
+        <div class="post-menu"><i class="bi bi-three-dots"></i></div>
+      </div>
+      <div class="post-text">Mid-semester exams coming up 😅 Who else is pulling all-nighters? Drop a 🙋 if you're surviving on coffee and prayer! ☕🤲 #AirUniversity #StudentLife #BSCS</div>
+      <div class="post-stats">
+        <div class="post-reactions">
+          <span class="react-emoji">😂</span><span class="react-emoji">😭</span><span class="react-emoji">👍</span>
+          <span style="margin-left:4px;">839</span>
+        </div>
+        <div class="post-comments-count">196 comments · 84 shares</div>
+      </div>
+      <div class="post-actions">
+        <div class="post-btn"><i class="bi bi-hand-thumbs-up"></i> Like</div>
+        <div class="post-btn"><i class="bi bi-chat"></i> Comment</div>
+        <div class="post-btn"><i class="bi bi-share"></i> Share</div>
+      </div>
+      <div class="comment-box">
+        <div class="nav-icon-round" style="background:linear-gradient(135deg,#1877f2,#7c4dff);color:#fff;font-size:13px;font-weight:800;">R</div>
+        <input class="comment-input" type="text" placeholder="Write a comment…"/>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── RIGHT SIDEBAR ── -->
+  <aside class="right-sidebar">
+
+    <!-- Birthday -->
+    <div class="birthday-box">
+      <div class="birthday-inner">
+        <i class="bi bi-balloon-fill"></i>
+        <div class="birthday-text">
+          <span>Sara Tariq</span> and <span>2 others</span> have birthdays today.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sponsored -->
+    <div class="right-section-title">Sponsored</div>
+
+    <div class="sponsor-card">
+      <div class="sponsor-img" style="background:linear-gradient(135deg,#1877f2,#7c4dff);">💻</div>
+      <div>
+        <div class="sponsor-name">Coursera Pakistan</div>
+        <div class="sponsor-sub">coursera.org &nbsp;·&nbsp; <span style="color:#1877f2;">Learn AI & ML</span></div>
+      </div>
+    </div>
+
+    <div class="sponsor-card mt-2">
+      <div class="sponsor-img" style="background:linear-gradient(135deg,#f7a400,#ff6b35);">📱</div>
+      <div>
+        <div class="sponsor-name">Samsung Pakistan</div>
+        <div class="sponsor-sub">samsung.com/pk &nbsp;·&nbsp; <span style="color:#1877f2;">Galaxy S25 Series</span></div>
+      </div>
+    </div>
+
+    <hr class="sidebar-divider mt-3"/>
+
+    <!-- Contacts -->
+    <div class="right-section-title d-flex justify-content-between align-items-center">
+      Contacts
+      <div style="display:flex;gap:6px;">
+        <div class="nav-icon-round" style="width:30px;height:30px;font-size:14px;"><i class="bi bi-search"></i></div>
+        <div class="nav-icon-round" style="width:30px;height:30px;font-size:14px;"><i class="bi bi-three-dots"></i></div>
+      </div>
+    </div>
+
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#f7a400,#ff6b35);">Z<div class="online-dot"></div></div>
+      <div class="contact-name">Zara Malik</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#42b72a,#00a400);">H<div class="online-dot"></div></div>
+      <div class="contact-name">Hassan Khan</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#e41e3f,#ff7eb3);">S<div class="online-dot"></div></div>
+      <div class="contact-name">Sara Tariq</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#9b30ff,#1877f2);">U</div>
+      <div class="contact-name">Umar Farooq</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#1877f2,#42b72a);">N<div class="online-dot"></div></div>
+      <div class="contact-name">Nadia Iqbal</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-avatar" style="background:linear-gradient(135deg,#f7a400,#e41e3f);">K</div>
+      <div class="contact-name">Kamran Ali</div>
+    </div>
+
+    <span class="see-more d-block mt-2">See all contacts ›</span>
+
+    <hr class="sidebar-divider mt-3"/>
+    <div style="font-size:11px;color:var(--muted);padding:4px;line-height:2;">
+      <a href="#" style="color:var(--muted);text-decoration:none;margin-right:8px;">Privacy</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;margin-right:8px;">Terms</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;margin-right:8px;">Advertising</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;margin-right:8px;">Ad Choices</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;margin-right:8px;">Cookies</a>
+      <a href="#" style="color:var(--muted);text-decoration:none;">More</a>
+      <div class="mt-1">Meta © 2025</div>
+    </div>
+
+  </aside>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
